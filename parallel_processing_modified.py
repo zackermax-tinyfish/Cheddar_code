@@ -70,7 +70,7 @@ async def fetch_jobs(context: BrowserContext, url):
     await page.goto(url)
     await page.wait_for_page_ready_state()
 
-    # Wait 5 seconds for the cookies popup to appear
+    # Wait 5 seconds for the cookies popup to appear (some pages delay it to foil scripts such as these)
     await page.wait_for_timeout(5000)
 
     # SPECIAL CASE FOR MCKINSEY WEBSITE: MUST ACCEPT COOKIES TO LOAD MORE
