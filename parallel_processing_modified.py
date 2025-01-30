@@ -1,4 +1,4 @@
-"""This example demonstrates how to asynchronously fetch product prices across websites in parallel with query_data() method."""
+"""This example demonstrates how to asynchronously fetch job listings across websites in parallel with query_data() method."""
 
 import os
 import asyncio
@@ -57,7 +57,7 @@ JOBS_QUERY = """
 """
 
 async def fetch_jobs(context: BrowserContext, url):
-    """Open the given URL in a new tab and fetch the price of the product."""
+    """Open the given URL in a new tab and fetch job listings."""
 
     # Create a page in a new tab in the browser context and wrap it to get access to the AgentQL's querying API
     page = await agentql.wrap_async(context.new_page())
@@ -95,14 +95,14 @@ async def fetch_jobs(context: BrowserContext, url):
             await page.wait_for_page_ready_state()
 
     # Fetch job data
-    print("Attempting pagination of", url)
     pages = await paginate(page, JOBS_QUERY, NUM_PAGES_TO_LOAD)
-    print("Paginated", url)
 
     # Extract job listings from `pages`
     jobs = []
     for page_data in pages:
         jobs.extend(page_data.get("jobs", []))
+
+    print(f"Found {len(jobs)} jobs on {url}")
 
     return jobs
 
