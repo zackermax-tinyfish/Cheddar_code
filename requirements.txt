@@ -1,0 +1,7 @@
+agentql>=1.7.0
+playwright
+pandas
+tf-playwright-stealth
+dotenv
+requests
+python-dotenv
