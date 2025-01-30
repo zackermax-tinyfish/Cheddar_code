@@ -56,12 +56,6 @@ JOBS_QUERY = """
 }
 """
 
-MCKINSEY_LOAD_MORE_QUERY = """
-{
-    load_more_button(The blue button that loads more jobs, not load more locations button.)
-}
-"""
-
 async def fetch_jobs(context: BrowserContext, url):
     """Open the given URL in a new tab and fetch the price of the product."""
 
@@ -80,13 +74,9 @@ async def fetch_jobs(context: BrowserContext, url):
         if response.cookies_form.accept_btn is not None:
             await response.cookies_form.accept_btn.click()
             await page.wait_for_page_ready_state()
-
-        # Attempt to load more jobs
-        load_more_response = await page.query_elements(LOAD_MORE_QUERY)
-        for _ in range(NUM_PAGES_TO_LOAD):
-            if load_more_response.load_more_button:
-                await load_more_response.load_more_button.click()
-                await page.wait_for_page_ready_state()
+        elif response.cookies_form.close_btn is not None:
+            await response.cookies_form.close_btn.click()
+            await page.wait_for_page_ready_state()
     else:
         # Reject cookies or close popup
         response = await page.query_elements(COOKIES_QUERY)
@@ -97,12 +87,12 @@ async def fetch_jobs(context: BrowserContext, url):
             await response.cookies_form.close_btn.click()
             await page.wait_for_page_ready_state()
 
-        # Attempt to load more jobs
-        load_more_response = await page.query_elements(LOAD_MORE_QUERY)
-        for _ in range(NUM_PAGES_TO_LOAD):
-            if load_more_response.load_more_button:
-                await load_more_response.load_more_button.click()
-                await page.wait_for_page_ready_state()
+    # Attempt to load more jobs
+    load_more_response = await page.query_elements(LOAD_MORE_QUERY)
+    for _ in range(NUM_PAGES_TO_LOAD):
+        if load_more_response.load_more_button:
+            await load_more_response.load_more_button.click()
+            await page.wait_for_page_ready_state()
 
     # Fetch job data
     print("Attempting pagination of", url)
